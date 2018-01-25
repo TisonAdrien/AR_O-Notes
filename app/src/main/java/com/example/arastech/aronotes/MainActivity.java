@@ -190,7 +190,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            final File file = new File(Environment.getExternalStorageDirectory()+"/ARONotes_"+ts+".jpg");
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -369,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> collection, org.altbeacon.beacon.Region region) {
         if (collection.size() > 0) {
-            Toast.makeText(getApplicationContext(),"The first beacon I see is about "+collection.iterator().next().getDistance()+" meters away.",Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(),"The first beacon I see is about "+collection.iterator().next().getDistance()+" meters away.",Toast.LENGTH_LONG).show();
             Log.i(TAG, "The first beacon I see is about "+collection.iterator().next().getDistance()+" meters away.");
         }
     }
