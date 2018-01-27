@@ -4,8 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -22,6 +24,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
@@ -58,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
     private BeaconManager mBeaconManager;
 
     private static final String TAG = "AndroidCameraApi";
-    private Button takePictureButton;
+    private FloatingActionButton takePictureButton;
+    private FloatingActionButton tutoButton;
+    private TextView tutoText;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -94,12 +100,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = (Button) findViewById(R.id.btn_takepicture);
+        takePictureButton = (FloatingActionButton) findViewById(R.id.floatingButtonTakePicture);
+        tutoButton = (FloatingActionButton) findViewById(R.id.floatingButtonTuto);
+        tutoText = (TextView) findViewById(R.id.textTuto);
         assert takePictureButton != null;
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
+            }
+        });
+        tutoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleTutorial();
             }
         });
     }
@@ -162,6 +176,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer, R
             e.printStackTrace();
         }
     }
+    protected void toggleTutorial(){
+        if(tutoText.getText().equals("")){
+            tutoText.setText("Approchez vous des oeuvres d'art avec votre smartphone, si une information y est caché, une fenêtre s'ouvrira pour vous les dévoiler !");
+            tutoText.setBackgroundColor(Color.argb(130, 40, 70, 150));
+        }else{
+            tutoText.setText("");
+            tutoText.setBackgroundColor(Color.argb(0, 40, 70, 150));
+        }
+    }
+
     protected void takePicture() {
         if(null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
